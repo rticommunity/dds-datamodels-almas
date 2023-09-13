@@ -1,0 +1,166 @@
+// Copyright 2005-2007 THALES, BAE Systems, Raytheon
+
+#include “dds_dlrl.idl”
+#include “ALMAS_DataModel.idl”
+#ifndef __ALMAS_Management_DEF
+#define __ALMAS_Management_DEF
+#pragma prefix "omg.org"
+
+module ALMAS_Management {
+
+ typedef sequence<ALMAS_DataModel::ALMAS_Alert> ALMAS_AlertSet;
+
+ typedef sequence<ALMAS_DataModel::ALMAS_TemplateIDType> ALMAS_TemplateIDTypeSet;
+
+ valuetype ALMAS_Manager : DDS::ObjectRoot {
+
+  attribute string ALMAS_SystemID;
+
+  // alert retrieval methods
+
+  ALMAS_DataModel::ALMAS_CallStatus GetAlert (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    out ALMAS_DataModel::ALMAS_Alert Alert);
+
+  ALMAS_DataModel::ALMAS_CallStatus GetAlerts (
+    in string Filter,
+    out ALMAS_AlertSet AlertSet);
+
+  // ALMAS-wide control methods
+
+  ALMAS_DataModel::ALMAS_CallStatus SetAlertInhibited (
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    in boolean Inhibition);
+
+  ALMAS_DataModel::ALMAS_CallStatus UpdateDynamicMessageData (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    in string DataValue,
+    in ALMAS_DataModel::ALMAS_DynamicMessageDataType OldData);
+
+  ALMAS_DataModel::ALMAS_CallStatus RegisterNotificationListener ( 
+    in ALMAS_Client::ALMAS_NotificationListener Handle);
+
+  // Template management methods
+
+  ALMAS_DataModel::ALMAS_CallStatus GetTemplate ( 
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    out ALMAS_DataModel::ALMAS_AlertTemplateType Template);
+
+  ALMAS_DataModel::ALMAS_CallStatus GetAllTemplateIDs ( 
+    in string Filter,
+    out ALMAS_TemplateIDTypeSet TemplateIDSet);
+ };
+
+ valuetype ALMAS_ManagerExtensions : ALMAS_Manager {
+
+  ALMAS_DataModel::ALMAS_CallStatus RemoveAlertsWithDynamicData ( 
+    in string CancellerID,
+    in string DataType,
+    in string DataValue);
+
+  ALMAS_DataModel::ALMAS_CallStatus AttachCategorisationRule (
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    in long RuleID);
+
+  ALMAS_DataModel::ALMAS_CallStatus DetachCategorisationRule (
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    in long RuleID);
+ };
+
+valuetype ALMAS_Producer : DDS::ObjectRoot {
+
+  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertFromOverrides ( 
+    in string ProducerID,
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    in ALMAS_DataModel::ALMAS_AlertDataType Attributes,
+    in boolean CategoryValid,
+    in boolean PriorityValid,
+    in boolean StatusValid,
+    in boolean ScopeValid,
+    in boolean TimeoutValid,
+    in boolean ConfirmationRequiredValid,
+    in boolean SecondaryGroupingValid,
+    in boolean PersistentValid,
+    in boolean ReliablyDistributedValid,
+    in boolean TimeoutActionValid,
+    in boolean AcknowledgementModelValid,
+    in boolean StaticMessagesValid,
+    in boolean DynamicMessagesValid,
+    out ALMAS_DataModel::ALMAS_AlertIDType AlertID);
+  
+  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertWithDynamicData ( 
+    in string ProducerID,
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    in ALMAS_DataModel::ALMAS_DynamicMessageDataType DynamicMessageData,
+    out ALMAS_DataModel::ALMAS_AlertIDType AlertID);
+  
+  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertFromData (
+    in string ProducerID,
+    in ALMAS_DataModel::ALMAS_AlertTemplateType AlertInfo,
+    out ALMAS_DataModel::ALMAS_AlertIDType AlertID);
+
+  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertFromTemplate (
+    in string ProducerID,
+    in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
+    out ALMAS_DataModel::ALMAS_AlertIDType AlertID);
+
+  ALMAS_DataModel::ALMAS_CallStatus UpdateAlertPriority (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    in string ProducerID,
+    in short Priority);
+
+  ALMAS_DataModel::ALMAS_CallStatus CancelAlert (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    in string CancellerID,
+    in string CancellationReason);
+ };
+
+ valuetype ALMAS_Responder : DDS::ObjectRoot {
+
+  ALMAS_DataModel::ALMAS_CallStatus RegisterReceiver ( 
+    in ALMAS_Client::ALMAS_Receiver Handle,
+    in string ReceiverID,
+    in string RKType);
+
+  ALMAS_DataModel::ALMAS_CallStatus UnregisterReceiver (
+    in string ReceiverID);
+
+  ALMAS_DataModel::ALMAS_CallStatus AcknowledgeAlert (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    in string ReceiverID);
+  
+  ALMAS_DataModel::ALMAS_CallStatus HandleAlert (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    in string ReceiverID);
+
+  ALMAS_DataModel::ALMAS_CallStatus ConfirmReceipt (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID, 
+    in string ReceiverID);
+ };
+
+ valuetype ALMAS_ResponderExtensions : ALMAS_Responder {
+
+  ALMAS_DataModel::ALMAS_CallStatus SetLanguage (
+    in string ReceiverID,
+    in string Language);
+  
+  ALMAS_DataModel::ALMAS_CallStatus GetFilledMessageText (
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
+    out ALMAS_DataModel::ALMAS_StringSet Messages);
+ };
+
+ valuetype ALMAS_Configuration : DDS::ObjectRoot {
+
+  ALMAS_DataModel::ALMAS_CallStatus LoadReceiverHierarchy (
+    in string Filename );
+  
+  ALMAS_DataModel::ALMAS_CallStatus LoadTemplateSet (
+    in string Filename );
+  
+  ALMAS_DataModel::ALMAS_CallStatus LoadConfiguration (
+    in string Filename );
+ };
+};
+
+#endif
+
