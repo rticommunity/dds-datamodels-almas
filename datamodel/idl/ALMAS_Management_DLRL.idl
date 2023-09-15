@@ -1,7 +1,7 @@
 // Copyright 2005-2007 THALES, BAE Systems, Raytheon
 
-#include “dds_dlrl.idl”
-#include “ALMAS_DataModel.idl”
+#include "dds_dlrl.idl"
+#include "ALMAS_DataModel.idl"
 #ifndef __ALMAS_Management_DEF
 #define __ALMAS_Management_DEF
 #pragma prefix "omg.org"
@@ -37,23 +37,23 @@ module ALMAS_Management {
     in string DataValue,
     in ALMAS_DataModel::ALMAS_DynamicMessageDataType OldData);
 
-  ALMAS_DataModel::ALMAS_CallStatus RegisterNotificationListener ( 
+  ALMAS_DataModel::ALMAS_CallStatus RegisterNotificationListener (
     in ALMAS_Client::ALMAS_NotificationListener Handle);
 
   // Template management methods
 
-  ALMAS_DataModel::ALMAS_CallStatus GetTemplate ( 
+  ALMAS_DataModel::ALMAS_CallStatus GetTemplate (
     in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
     out ALMAS_DataModel::ALMAS_AlertTemplateType Template);
 
-  ALMAS_DataModel::ALMAS_CallStatus GetAllTemplateIDs ( 
+  ALMAS_DataModel::ALMAS_CallStatus GetAllTemplateIDs (
     in string Filter,
     out ALMAS_TemplateIDTypeSet TemplateIDSet);
  };
 
  valuetype ALMAS_ManagerExtensions : ALMAS_Manager {
 
-  ALMAS_DataModel::ALMAS_CallStatus RemoveAlertsWithDynamicData ( 
+  ALMAS_DataModel::ALMAS_CallStatus RemoveAlertsWithDynamicData (
     in string CancellerID,
     in string DataType,
     in string DataValue);
@@ -69,7 +69,7 @@ module ALMAS_Management {
 
 valuetype ALMAS_Producer : DDS::ObjectRoot {
 
-  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertFromOverrides ( 
+  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertFromOverrides (
     in string ProducerID,
     in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
     in ALMAS_DataModel::ALMAS_AlertDataType Attributes,
@@ -87,13 +87,13 @@ valuetype ALMAS_Producer : DDS::ObjectRoot {
     in boolean StaticMessagesValid,
     in boolean DynamicMessagesValid,
     out ALMAS_DataModel::ALMAS_AlertIDType AlertID);
-  
-  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertWithDynamicData ( 
+
+  ALMAS_DataModel::ALMAS_CallStatus RaiseAlertWithDynamicData (
     in string ProducerID,
     in ALMAS_DataModel::ALMAS_TemplateIDType TemplateID,
     in ALMAS_DataModel::ALMAS_DynamicMessageDataType DynamicMessageData,
     out ALMAS_DataModel::ALMAS_AlertIDType AlertID);
-  
+
   ALMAS_DataModel::ALMAS_CallStatus RaiseAlertFromData (
     in string ProducerID,
     in ALMAS_DataModel::ALMAS_AlertTemplateType AlertInfo,
@@ -117,7 +117,7 @@ valuetype ALMAS_Producer : DDS::ObjectRoot {
 
  valuetype ALMAS_Responder : DDS::ObjectRoot {
 
-  ALMAS_DataModel::ALMAS_CallStatus RegisterReceiver ( 
+  ALMAS_DataModel::ALMAS_CallStatus RegisterReceiver (
     in ALMAS_Client::ALMAS_Receiver Handle,
     in string ReceiverID,
     in string RKType);
@@ -128,13 +128,13 @@ valuetype ALMAS_Producer : DDS::ObjectRoot {
   ALMAS_DataModel::ALMAS_CallStatus AcknowledgeAlert (
     in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
     in string ReceiverID);
-  
+
   ALMAS_DataModel::ALMAS_CallStatus HandleAlert (
     in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
     in string ReceiverID);
 
   ALMAS_DataModel::ALMAS_CallStatus ConfirmReceipt (
-    in ALMAS_DataModel::ALMAS_AlertIDType AlertID, 
+    in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
     in string ReceiverID);
  };
 
@@ -143,7 +143,7 @@ valuetype ALMAS_Producer : DDS::ObjectRoot {
   ALMAS_DataModel::ALMAS_CallStatus SetLanguage (
     in string ReceiverID,
     in string Language);
-  
+
   ALMAS_DataModel::ALMAS_CallStatus GetFilledMessageText (
     in ALMAS_DataModel::ALMAS_AlertIDType AlertID,
     out ALMAS_DataModel::ALMAS_StringSet Messages);
@@ -153,10 +153,10 @@ valuetype ALMAS_Producer : DDS::ObjectRoot {
 
   ALMAS_DataModel::ALMAS_CallStatus LoadReceiverHierarchy (
     in string Filename );
-  
+
   ALMAS_DataModel::ALMAS_CallStatus LoadTemplateSet (
     in string Filename );
-  
+
   ALMAS_DataModel::ALMAS_CallStatus LoadConfiguration (
     in string Filename );
  };

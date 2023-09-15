@@ -1,7 +1,6 @@
 // copyright 2005-8 THALES, BAE Systems, Raytheon
 
-//#include "timebase.idl" 
-#include "dds_dcps.idl"  // use for DDS standard compatible time types 
+#include "dds_dcps.idl"
 
 #ifndef __ALMAS_DataModel_DEF
 #define __ALMAS_DataModel_DEF
@@ -14,8 +13,7 @@ module ALMAS_DataModel {
 
  typedef long ALMAS_TimeoutType;
 
-// typedef TimeBase::TimeT ALMAS_DateTimeType; // EVoT compatible � long long
- typedef DDS::Time_t ALMAS_DateTimeType; // DDS compatible
+ typedef DDS::Time_t ALMAS_DateTimeType;
 
  typedef sequence<octet> ALMAS_ByteSequence;
 
@@ -62,11 +60,11 @@ module ALMAS_DataModel {
    short Reason;
    string Description; };
 
- struct ALMAS_ValidAlertResponseType { 
+ struct ALMAS_ValidAlertResponseType {
    ALMAS_StringSet AlternativeAction;
    short ActioneePriority; };
 
- struct ALMAS_ReceiverKindType { 
+ struct ALMAS_ReceiverKindType {
    string RKType;
    string RKParentType;
    ALMAS_ValidAlertResponseType ValidResponse; };
@@ -91,7 +89,7 @@ module ALMAS_DataModel {
  typedef sequence<ALMAS_AlertDataExtraAttributesType> ALMAS_AlertDataExtraAttributesTypeSet;
 
  struct ALMAS_AlertDataType {
-   ALMAS_TemplateIDType TemplateID;
+   @key ALMAS_TemplateIDType TemplateID;
    ALMAS_CategoryType Category;
    short Priority;
    ALMAS_StatusType Status;
@@ -110,9 +108,8 @@ module ALMAS_DataModel {
  struct ALMAS_AlertTemplateType {
    boolean Inhibited;
    boolean RaiseToAll;
-   ALMAS_AlertDataType AlertData;
+   @key ALMAS_AlertDataType AlertData;
    ALMAS_ReceiverKindTypeSet ReceiverKinds; };
- #pragma keylist ALMAS_AlertTemplateType AlertData.TemplateID
 
  struct ALMAS_AlertReportType {
    boolean Acknowledged;
@@ -120,25 +117,22 @@ module ALMAS_DataModel {
    boolean Actioned;
    boolean ReceiverIsActionee;
    ALMAS_StringSet AlternativeAction;
-   string ReceiverID;
-   ALMAS_AlertIDType AlertID; };
- #pragma keylist ALMAS_AlertReportType ReceiverID, AlertID
+   @key string ReceiverID;
+   @key ALMAS_AlertIDType AlertID; };
 
  struct ALMAS_AvailableAlertReceiverType {
    string ReceiverID;
-   ALMAS_ReceiverKindType ReceiverKind; }; 
+   ALMAS_ReceiverKindType ReceiverKind; };
  typedef sequence<ALMAS_AvailableAlertReceiverType> ALMAS_AvailableAlertReceiverTypeSet;
 
  struct ALMAS_Alert {
-   ALMAS_AlertIDType AlertID;
+   @key ALMAS_AlertIDType AlertID;
    ALMAS_DateTimeType RaisingTime;
    ALMAS_StateType CurrentState;
    string ProducerID;
    ALMAS_AlertDataType AlertData;
    ALMAS_AvailableAlertReceiverTypeSet Receivers; };
- #pragma keylist ALMAS_Alert AlertID
 
 };
 
 #endif
-
