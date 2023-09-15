@@ -37,25 +37,25 @@ struct ALMAS_RegisterReceiver {
    @key ALMAS_RequestIdType request_id;
    string ProducerID;
    ALMAS_DataModel::ALMAS_TemplateIDType TemplateID;
-   @optional ALMAS_CategoryType Category;
+   @optional ALMAS_DataModel::ALMAS_CategoryType Category;
    @optional short Priority;
-   @optional ALMAS_StatusType Status;
-   @optional ALMAS_ScopeType Scope;
-   @optional ALMAS_TimeoutType Timeout;
+   @optional ALMAS_DataModel::ALMAS_StatusType Status;
+   @optional ALMAS_DataModel::ALMAS_ScopeType Scope;
+   @optional ALMAS_DataModel::ALMAS_TimeoutType Timeout;
    @optional boolean ConfirmationRequired;
    @optional string SecondaryGrouping;
    @optional boolean Persistent;
    @optional boolean ReliablyDistributed;
-   @optional ALMAS_TimeoutActionType TimeoutAction;
-   @optional ALMAS_AckModelType AcknowledgementModel;
-   @optional ALMAS_StaticMessageTypeSet StaticMessages;
-   @optional ALMAS_DynamicMessageDataTypeSet DynamicMessages; };
+   @optional ALMAS_DataModel::ALMAS_TimeoutActionType TimeoutAction;
+   @optional ALMAS_DataModel::ALMAS_AckModelType AcknowledgementModel;
+   @optional ALMAS_DataModel::ALMAS_StaticMessageTypeSet StaticMessages;
+   @optional ALMAS_DataModel::ALMAS_DynamicMessageDataTypeSet DynamicMessages; };
 
  struct ALMAS_RaiseAlertWithDynamicData {
    @key ALMAS_RequestIdType request_id;
    string ProducerID;
    ALMAS_DataModel::ALMAS_TemplateIDType TemplateID;
-   ALMAS_DataModel:: ALMAS_DynamicMessageDataType; };
+   ALMAS_DataModel::ALMAS_DynamicMessageDataType DynamicMessageData; };
 
  struct ALMAS_RaiseAlertFromData  {
    @key ALMAS_RequestIdType request_id;
