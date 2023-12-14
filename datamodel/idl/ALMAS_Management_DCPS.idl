@@ -17,7 +17,7 @@ module ALMAS_Management {
 
  // Need a singleton topic for ALMAS_Manager since it has attributes
  struct ALMAS_Manager {
-   @key string SystemID;};
+   string SystemID;};
 
  struct ALMAS_RaiseAlertFromTemplate {
    @key ALMAS_RequestIdType request_id;
