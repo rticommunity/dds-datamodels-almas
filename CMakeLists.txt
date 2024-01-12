@@ -13,32 +13,49 @@
 #                                                                             #
 ###############################################################################
 
-# Download dependencies from the dds-datamodels-utils repo and load all
-# necessary files from it.
-# This setns two variables that may be used:
-#   * datamodels_utils: the name of the datamodels-utils folder
-#   * rti_cmake_utils: the name of the rticonnextdds-cmake-utils folder
+# Load the dependencies of dds-datamodel-utils and rticonnextdds-cmake-utils.
+# The dds-datamodel-utils repo may be provided by setting the variable
+# DDS_DATAMODELS_UTILS_DIR to point to a local copy of this repository.
+# If this is not provided, this macro downloads it as a dependency.
+# This macro alsso loads all necessary files from the dependencies.
+# This sets two variables that may be used in the parent scope:
+#   * datamodels_utils_dir: the path to the datamodels-utils repo
+#   * rti_cmake_utils_dir: the path to the rticonnextdds-cmake-utils repo
 macro (configure_datamodels_dependencies)
 
-    include(FetchContent)
+    # Get the absolute path for the dds-datamodels-utils repo if it is defined
+    set(datamodels_utils_dir)
+    if (DEFINED DDS_DATAMODELS_UTILS_DIR)
+        get_filename_component(
+            datamodels_utils_dir
+            "${CMAKE_CURRENT_BINARY_DIR}/${DDS_DATAMODELS_UTILS_DIR}"
+            ABSOLUTE)
+    endif()
 
-    # Set this policy to avoid updating any submodule repositories
-    cmake_policy(SET CMP0097 NEW)
+    if(NOT IS_DIRECTORY ${datamodels_utils_dir})
+        set(datamodels_utils_name_ dds-datamodels-utils)
 
-    # Fetch the content of the rticonnextdds-cmake-utils repo
-    set(datamodels_utils dds-datamodels-utils)
-    set(rti_cmake_utils rticonnextdds-cmake-utils)
-    FetchContent_Declare(${datamodels_utils}
-        GIT_REPOSITORY https://github.com/rticommunity/dds-datamodels-utils.git
-        GIT_TAG main
-        SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/${datamodels_utils}"
-    )
+        include(FetchContent)
 
-    FetchContent_MakeAvailable(${datamodels_utils})
+        # Set this policy to avoid updating any submodule repositories
+        cmake_policy(SET CMP0097 NEW)
 
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${datamodels_utils}/cmake")
-    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${datamodels_utils}/${rti_cmake_utils}/cmake/Modules")
+        set(datamodels_utils_dir ${CMAKE_CURRENT_BINARY_DIR}/${datamodels_utils_name_})
 
+        # Fetch the content of the rticonnextdds-cmake-utils repo
+        FetchContent_Declare(${datamodels_utils_name_}
+            GIT_REPOSITORY https://github.com/rticommunity/dds-datamodels-utils.git
+            GIT_TAG main
+            SOURCE_DIR "${datamodels_utils_dir}"
+        )
+        FetchContent_MakeAvailable(${datamodels_utils_name_})
+
+        unset(datamodels_utils_name_)
+    endif()
+    get_filename_component(rti_cmake_utils_dir "${datamodels_utils_dir}/rticonnextdds-cmake-utils" ABSOLUTE)
+
+    list(APPEND CMAKE_MODULE_PATH "${datamodels_utils_dir}/cmake")
+    list(APPEND CMAKE_MODULE_PATH "${rti_cmake_utils_dir}/cmake/Modules")
 endmacro()
 
 
@@ -64,10 +81,10 @@ include(ConnextDdsDatamodelsGenerateCode)
 
 connextdds_datamodels_generate_code(
     INPUT_FOLDERS "datamodel/idl"
-    OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl/"
+    OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl"
     LANG C++11
     IGNORE_IDL_NAMES "ALMAS_Management_DLRL"
-    IDL_DEPENDENCIES_FOLDERS "${CMAKE_CURRENT_BINARY_DIR}/${datamodels_utils}/dds"
+    IDL_DEPENDENCIES_FOLDERS "${datamodels_utils_dir}/dds"
     CODEGEN_EXTRA_ARGS "-verbosity" "1"
 )
 
@@ -80,7 +97,7 @@ target_include_directories(${library_name}
     PRIVATE
         ${CONNEXTDDS_INCLUDE_DIRS}
         "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl"
-        "${CMAKE_CURRENT_BINARY_DIR}/dependencies/"
+        "${CMAKE_CURRENT_BINARY_DIR}/dependencies"
 )
 
 target_link_libraries(${library_name}

@@ -55,3 +55,16 @@ cd build
 cmake ..
 cmake --build .
 ```
+
+This CMake script downloads the
+[dds-datamodels-utils](https://github.com/rticommunity/dds-datamodels-utils)
+repository that contains dependencies of this repo. You can also provide a local
+copy of that repository by setting the cmake variable
+`DDS_DATAMODELS_UTILS_DIR` to point to it:
+
+```
+cmake .. -DDDS_DATAMODELS_UTILS_DIR=../../dds-datamodels-utils
+```
+
+**NOTE**: if you are using a relative path to define `DDS_DATAMODELS_UTILS_DIR`,
+it should be relative from the `CMAKE_CURRENT_BINARY_DIR`
