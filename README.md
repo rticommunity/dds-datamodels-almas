@@ -65,3 +65,14 @@ absolute path where the `dds-datamodels-utils` repo is located, for example:
 ```
 cmake .. -DDDS_DATAMODELS_UTILS_DIR=/Users/angel/datamodels/dds-datamodels-utils
 ```
+
+## Generating XML files
+
+In order to generate XML files from this datamodel, you need to set the CMake
+variable `DDS_DATAMODELS_CONVERT_TO_XML`, for example:
+```
+mkdir build
+cd build
+cmake .. -DDDS_DATAMODELS_CONVERT_TO_XML=ON
+cmake --build .
+```

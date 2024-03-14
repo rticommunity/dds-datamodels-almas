@@ -72,29 +72,42 @@ find_package(
 )
 
 include(ConnextDdsDatamodelsGenerateCode)
+include(ConnextDdsDatamodelsConvertToXml)
 
-connextdds_datamodels_generate_code(
-    INPUT_FOLDERS "datamodel/idl"
-    OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl"
-    LANG C++11
-    IGNORE_IDL_NAMES "ALMAS_Management_DLRL"
-    IDL_DEPENDENCIES_FOLDERS "${DDS_DATAMODELS_UTILS_DIR}/dds"
-    CODEGEN_EXTRA_ARGS "-verbosity" "1"
-)
+if (DDS_DATAMODELS_CONVERT_TO_XML)
 
-add_library(${library_name}
-    SHARED
-        ${GENERATED_SRC_FILES}
-)
+    connextdds_datamodels_convert_to_xml(
+        INPUT_FOLDERS "datamodel/idl"
+        OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/datamodel/xml"
+        IGNORE_IDL_NAMES "ALMAS_Management_DLRL"
+        IDL_DEPENDENCIES_FOLDERS "${DDS_DATAMODELS_UTILS_DIR}/dds"
+        CODEGEN_EXTRA_ARGS "-verbosity" "1"
+    )
+else()
+    connextdds_datamodels_generate_code(
+        INPUT_FOLDERS "datamodel/idl"
+        OUTPUT_FOLDER "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl"
+        LANG C++11
+        IGNORE_IDL_NAMES "ALMAS_Management_DLRL"
+        IDL_DEPENDENCIES_FOLDERS "${DDS_DATAMODELS_UTILS_DIR}/dds"
+        CODEGEN_EXTRA_ARGS "-verbosity" "1"
+    )
 
-target_include_directories(${library_name}
-    PRIVATE
-        ${CONNEXTDDS_INCLUDE_DIRS}
-        "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl"
-        "${CMAKE_CURRENT_BINARY_DIR}/dependencies"
-)
+    add_library(${library_name}
+        SHARED
+            ${GENERATED_SRC_FILES}
+    )
 
-target_link_libraries(${library_name}
-    PRIVATE
-        RTIConnextDDS::cpp2_api
-)
+    target_include_directories(${library_name}
+        PRIVATE
+            ${CONNEXTDDS_INCLUDE_DIRS}
+            "${CMAKE_CURRENT_BINARY_DIR}/datamodel/idl"
+            "${CMAKE_CURRENT_BINARY_DIR}/dependencies"
+    )
+
+    target_link_libraries(${library_name}
+        PRIVATE
+            RTIConnextDDS::cpp2_api
+    )
+endif()
+
