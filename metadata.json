@@ -1,0 +1,16 @@
+{
+   "datamodel": {
+       "name": "ALMAS",
+       "domain": "Defense",
+       "organization": "OMG",
+       "description": "Alert Management Service",
+       "contact": "https://www.omg.org/spec/contact?i=ALMAS/1.3/Beta1",
+       "purpose": "",
+       "topic": "",
+       "version": "1.3-Beta1-enhanced",
+       "previous": -1,
+       "compression": "",
+       "enhanced": true,
+       "repository": "https://github.com/rticommunity/dds-datamodels-almas"
+   }
+}
